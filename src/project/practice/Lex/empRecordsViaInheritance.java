@@ -121,6 +121,7 @@ public class empRecordsViaInheritance {
 
         System.out.println("Permanent Employee your salary is : " + perEmp.getSalary());
         System.out.println("Contract Employee your salary is : " + conEmp.getSalary());
+
     }
 
 }
