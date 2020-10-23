@@ -66,9 +66,7 @@ public class sockMerchant {
             int arItem = Integer.parseInt(arItems[i]);
             ar[i] = arItem;
         }
-
         System.out.println(noOfPairs(n, ar));
-
         scanner.close();
     }
 
