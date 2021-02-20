@@ -6,23 +6,22 @@ If there is a tie for the shortest combination, we can return any one the shorte
 */
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class BestSumMemoization {
+    static int[] bestSum(int targetSum, int[] numbers, Map<Integer, int[]> memo) {
 
-    static final Map<Integer, int[]> memo = new HashMap<>();
-
-    static int[] bestSum(int targetSum, int[] numbers) {
         if (memo.containsKey(targetSum)) return memo.get(targetSum);
-        if (targetSum == 0) return new int[0];
+
+        if (targetSum == 0) return new int[]{};
         if (targetSum < 0) return null;
 
         int[] shortestCombination = null;
 
         for (int num : numbers) {
             int remainder = targetSum - num;
-            int[] remainderCombination = bestSum(remainder, numbers);
+            int[] remainderCombination = bestSum(remainder, numbers, memo);
             if (remainderCombination != null) {
                 int[] combination = insert(remainderCombination, num);
                 if (shortestCombination == null || combination.length < shortestCombination.length)
@@ -41,9 +40,9 @@ public class BestSumMemoization {
 
     public static void main(String[] args) {
         System.out.println("The shortest combination of numbers that adds up to exactly the targetSum are as follows -");
-        System.out.println("Target Sum = 7 for elements [5,3,4,7] = " + Arrays.toString(bestSum(7, new int[]{5, 3, 4, 7})));
-        System.out.println("Target Sum = 8 for elements [2,3,5] = " + Arrays.toString(bestSum(8, new int[]{2, 3, 5})));
-        System.out.println("Target Sum = 8 for elements [1,4,5] = " + Arrays.toString(bestSum(8, new int[]{1, 4, 5})));
-        System.out.println("Target Sum = 100 for elements [1,2,5,25] = " + Arrays.toString(bestSum(100, new int[]{1, 2, 5, 25})));
+        System.out.println("Target Sum = 7 for elements [5,3,4,7] = " + Arrays.toString(bestSum(7, new int[]{5, 3, 4, 7}, new WeakHashMap<>())));
+        System.out.println("Target Sum = 8 for elements [2,3,5] = " + Arrays.toString(bestSum(8, new int[]{2, 3, 5}, new WeakHashMap<>())));
+        System.out.println("Target Sum = 8 for elements [1,4,5] = " + Arrays.toString(bestSum(8, new int[]{1, 4, 5}, new WeakHashMap<>())));
+        System.out.println("Target Sum = 100 for elements [1,2,5,25] = " + Arrays.toString(bestSum(100, new int[]{1, 2, 5, 25}, new WeakHashMap<>())));
     }
 }
