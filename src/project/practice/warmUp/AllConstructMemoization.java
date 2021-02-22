@@ -5,44 +5,36 @@ The function should return a 2D array containing all the ways that the target ca
 You may re-use elements of wordBank as many times as needed.
 */
 
+import java.util.WeakHashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 
 public class AllConstructMemoization {
-    static List<ArrayList<String>> allConstruct(String target, String[] wordBank, Map<String, List<ArrayList<String>>> memo) {
+    static List<List<String>> allConstruct(String target, String[] wordBank, Map<String, List<List<String>>> memo) {
 
         if (memo.containsKey(target)) return memo.get(target);
 
         //If target is acquirable then return [[]] ie. an empty array inside a list, a boundary condition to start adding eligible elements on our empty array.
-        if (target.isEmpty()) {
-            List<ArrayList<String>> targetList = new ArrayList<>();
-            targetList.add(new ArrayList<>());
-            return targetList;
-        }
+        if (target.isEmpty()) return Collections.singletonList(new ArrayList<>());
 
-        List<ArrayList<String>> result = new ArrayList<>();
-        memo.clear(); //Really necessary to flush out previous tree, when starting with a new tree creation
+        List<List<String>> result = new ArrayList<>();
 
         for (String word : wordBank) {
-            if (target.indexOf(word) == 0) {
-                String suffix = target.substring(word.length());
-                List<ArrayList<String>> suffixWays = allConstruct(suffix, wordBank, memo);
-                List<ArrayList<String>> targetWays = mapLists(suffixWays, word);
-                result.addAll(targetWays);
+            if (target.startsWith(word)) {
+                List<List<String>> suffixWays = allConstruct(target.replaceFirst(word, ""), wordBank, memo)
+                        .stream()
+                        .map(ArrayList::new)
+                        .collect(Collectors.toList());
+                suffixWays.forEach(a -> a.add(0, word));
+                result.addAll(suffixWays);
             }
         }
         memo.put(target, result);
         return result;
-    }
-
-    static List<ArrayList<String>> mapLists(List<ArrayList<String>> suffixWays, String word) {
-        for (ArrayList<String> suffix : suffixWays) {
-            suffix.add(0, word);
-        }
-        return suffixWays;
     }
 
     public static void main(String[] args) {
